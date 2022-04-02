@@ -9,11 +9,10 @@ public class Paciente {
     private String nombre;
     private List<Enfermedad> enfermedades;
 
-    public Paciente () {this.enfermedades = new ArrayList<>();}
-
     public Paciente(long cedula, String nombre) {
         this.cedula = cedula;
         this.nombre = nombre;
+        this.enfermedades = new ArrayList<>();
     }
 
     public long getCedula() {
@@ -30,5 +29,9 @@ public class Paciente {
 
     public List<Enfermedad> getEnfermedades() {
         return enfermedades;
+    }
+
+    public void setEnfermedades(List<Enfermedad> enfermedades) {
+        this.enfermedades = enfermedades;
     }
 }

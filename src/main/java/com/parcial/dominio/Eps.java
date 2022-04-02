@@ -21,9 +21,12 @@ public class Eps {
                 return true;
             } else {
                 System.out.println("El paciente ya se encuentra afiliado.");
+                return false;
             }
+        } else {
+            System.out.println("No se pueden afiliar mas pacientes. ");
+            return false;
         }
-        return false;
     }
 
     public void sacarPaciente (long cedula) {
@@ -45,17 +48,17 @@ public class Eps {
         return null;
     }
 
-    public List<Paciente> buscarPacientePorEnfermedad (String enfermedad) {
-        List<Paciente> pacienteEnfermoABuscar = this.pacientes.stream()
-                .filter(paciente -> paciente.getEnfermedades().equals(enfermedad))
+    private List<Paciente> buscarPacientePorEnfermedad (String enfermedad) {
+        return this.pacientes.stream().filter(paciente -> paciente.getEnfermedades()
+                .stream().anyMatch(enferm -> enferm.getNombre().equalsIgnoreCase(enfermedad)))
                 .collect(Collectors.toList());
-        return pacienteEnfermoABuscar;
+
     }
 
     public List<Paciente> buscarPacienteSinEnfermedad() {
         List<Paciente> pacientesSanosABuscar = this.pacientes.stream()
-                .filter(paciente -> paciente.getEnfermedades()==null||paciente.getEnfermedades().size()==0)
-                .collect(Collectors.toList());
+                .filter(paciente -> paciente.getEnfermedades().size()==0).
+                collect(Collectors.toList());
         if ((pacientesSanosABuscar!=null)&&(pacientesSanosABuscar.size()>0)) {
             System.out.println("La lista de pacientes sanos son: ");
             pacientesSanosABuscar.forEach(paciente -> System.out.println(paciente.getNombre()));
@@ -67,7 +70,28 @@ public class Eps {
 
     public void ordenarPacientesPorNombre () {
         this.pacientes.sort(Comparator.comparing(Paciente::getNombre).thenComparing(Paciente::getCedula));
-        this.pacientes.forEach(patient -> System.out.println(patient.getNombre() + " ---> "+ patient.getCedula()));
+        this.pacientes.forEach(patient -> System.out.println(patient.getNombre() + " ---> "
+                + patient.getCedula() + " Enfermedades: "+ patient.getEnfermedades().size()));
+//
     }
 
+    public void enfermedadesPacientes (String enfermedad) { // buscar pacientes por enfermedad.
+        List<Paciente> pacienteEnfermo = buscarPacientePorEnfermedad(enfermedad);
+        if ((pacienteEnfermo!=null)&&(pacienteEnfermo.size()>0)){
+            pacienteEnfermo.forEach(patient -> System.out.println("Pacientes: " + patient.getNombre()));
+        } else {
+            System.out.println("No existen pacientes enfermos");
+        }
+    }
+
+    public void mostrarEnfermedadesPacientes (long cedula) {
+        Paciente pacienteEnfermo = buscarPaciente(cedula);
+        if ((pacienteEnfermo!=null)){
+            System.out.println("El paciente " + pacienteEnfermo.getNombre());
+            pacienteEnfermo.getEnfermedades().forEach(enfermedad ->
+                    System.out.println("esta enfermo de: " + enfermedad.getNombre()));
+        } else {
+            System.out.println("No existe ningun paciente afiliado con esa cedula.");
+        }
+    }
 }

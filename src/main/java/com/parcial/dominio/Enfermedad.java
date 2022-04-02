@@ -29,6 +29,8 @@ public class Enfermedad {
     public void setGravedad(int gravedad) {
         this.gravedad = gravedad;
     }
+
+
 }
 
 
